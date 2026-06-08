@@ -1,0 +1,17 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+# Note: .terraform.lock.hcl is intentionally tracked (pin provider versions)
+
+# SSH private key — NEVER commit this
+*.pem
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment files
+.env
+.env.*

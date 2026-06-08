@@ -1,0 +1,5 @@
+{
+  "agent_name": "code-review-agent",
+  "review_destination_webhook": "https://webhook.site/3e86fe7f-1b83-4643-a058-3212aa7831c9",
+  "model": "claude-sonnet-4-6"
+}

@@ -1,0 +1,41 @@
+---
+name: Code Review Agent
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'agent/**'
+  workflow_dispatch:
+
+jobs:
+  review:
+    runs-on: self-hosted
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Verify Claude Code is available
+        run: |
+          which claude
+          claude --version
+      - name: Read agent config
+        id: config
+        working-directory: agent
+        run: |
+          WEBHOOK=$(jq -r '.review_destination_webhook' agent-config.json)
+          echo "webhook=$WEBHOOK" >> $GITHUB_OUTPUT
+          echo "Agent will POST review to: $WEBHOOK"
+      - name: Run code review agent
+        working-directory: agent
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          WEBHOOK_URL: ${{ steps.config.outputs.webhook }}
+        run: |
+          claude --print --permission-mode acceptEdits --allowedTools "Bash" \
+            "Read src/example.py. Write a brief code review (3-5 sentences) \
+             noting any issues. Then use the bash tool to run: \
+             curl -X POST \$WEBHOOK_URL -H 'Content-Type: application/json' \
+             -d '{\"file\":\"src/example.py\",\"review\":\"<your review here>\"}'. \
+             Report the curl exit code at the end. If curl exits non-zero, \
+             exit with code 1 so the workflow shows as failed."
