@@ -32,10 +32,7 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           WEBHOOK_URL: ${{ steps.config.outputs.webhook }}
         run: |
-          claude --print --permission-mode acceptEdits --allowedTools "Bash" \
-            "Read src/example.py. Write a brief code review (3-5 sentences) \
-             noting any issues. Then use the bash tool to run: \
-             curl -X POST \$WEBHOOK_URL -H 'Content-Type: application/json' \
-             -d '{\"file\":\"src/example.py\",\"review\":\"<your review here>\"}'. \
-             Report the curl exit code at the end. If curl exits non-zero, \
-             exit with code 1 so the workflow shows as failed."
+          cat > /tmp/agent-prompt.txt << 'PROMPT_EOF'
+          Read src/example.py. Write a brief code review (3-5 sentences) noting any issues. Then use the bash tool to run: curl -X POST $WEBHOOK_URL -H 'Content-Type: application/json' -d '{"file":"src/example.py","review":"<your review here>"}'. Report the curl exit code at the end. If curl exits non-zero, exit with code 1 so the workflow shows as failed.
+          PROMPT_EOF
+          claude --print --permission-mode acceptEdits --allowedTools Bash < /tmp/agent-prompt.txt
