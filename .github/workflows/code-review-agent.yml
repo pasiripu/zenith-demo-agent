@@ -4,8 +4,6 @@ name: Code Review Agent
 on:
   pull_request:
     branches: [main]
-    paths:
-      - 'agent/**'
   workflow_dispatch:
 
 jobs:
