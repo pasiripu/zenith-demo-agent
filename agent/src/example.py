@@ -11,3 +11,5 @@ def build_scan_config(repo_name, options={}):
 
 def schedule_scans(repos):
     return [build_scan_config(r) for r in repos]
+
+#new test
