@@ -5,7 +5,7 @@ Shows that AI agents are workloads, and workload egress can be governed with the
 same identity-based controls used for any other VPC resource.
 
 
-For testing only 
+For Testing
 ---
 
 ## What this builds
